@@ -106,7 +106,7 @@ app.post("/api/login", (req, res) => {
                         jwtSecret,
                         { expiresIn: "1h" } // مدة الصلاحية ساعة
                     );
-                    res.status(200).json({ succ: true });
+                    res.status(200).json({ succ: true , token});
                 } else {
                     res.status(401).json({ succ: false, msg: "Invalid username Or password" });
                 };
