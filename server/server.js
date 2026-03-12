@@ -88,7 +88,10 @@ app.post("/api/register", async (req, res) => {
                 } else {
                     const Hashed_Pass = await bcrypt.hash(password, 10);
                     const OTP = Math.floor(100000 + Math.random() * 900000).toString();
+                    console.log(OTP);
                     req.session.user = { username: username, email: email, password: Hashed_Pass, OTP: OTP };
+                    
+                    
                     transporter.sendMail({
                         from: process.env.TRP_FROM, // تأكد من تحديثه إذا قمت بتغييره
                         to: email,
@@ -103,6 +106,7 @@ app.post("/api/register", async (req, res) => {
                             res.status(200).json({ succ: true, msg: "OTP sent to your email" });
                         };
                     });
+                    
                 };
             }
         );
