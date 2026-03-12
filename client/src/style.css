@@ -1,0 +1,288 @@
+/* =========================================
+   1. إعدادات المتغيرات والعناصر العامة
+   ========================================= */
+:root {
+    --bg-main: #0d1117;
+    --bg-card: #161b22;
+    --bg-input: #0d1117;
+    --bg-btn-hover: #30363d;
+    --border-color: #30363d;
+    --text-primary: #c9d1d9;
+    --text-white: #f0f6fc;
+    --accent-blue: #58a6ff;
+    --btn-green: #238636;
+    --btn-green-hover: #2ea043;
+}
+
+body {
+    background-color: var(--bg-main);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: var(--text-primary);
+    margin: 0;
+    padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* =========================================
+   2. تنسيق الـ Header والـ Navbar
+   ========================================= */
+.main-header {
+    background-color: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 60px;
+}
+
+.nav-logo a {
+    color: var(--text-white);
+    font-weight: 600;
+    font-size: 1.2rem;
+    text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links li {
+    position: relative;
+}
+
+.nav-links li a {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 14px;
+    padding: 10px 15px;
+    transition: color 0.3s;
+}
+
+.nav-links li a:hover {
+    color: var(--accent-blue);
+}
+
+/* --- القائمة المنسدلة (Dropdown) --- */
+.dropdown-content {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #1c2128;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    min-width: 180px;
+    padding: 8px 0;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    
+    /* Animation */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dropdown:hover .dropdown-content {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-content li {
+    display: block;
+    width: 100%;
+}
+
+.dropdown-content li a {
+    display: block;
+    padding: 8px 16px;
+    font-size: 13px;
+}
+
+.dropdown-content li:hover {
+    background-color: var(--bg-btn-hover);
+}
+
+#about {
+    scroll-margin-top: 80px; /* نفس ارتفاع الهيدر الخاص بك */
+}
+
+/* تنسيق عام للأقسام */
+.content-section {
+    min-height: 80vh; /* يجعل كل قسم يأخذ مساحة كبيرة ليظهر الفرق عند التمرير */
+    padding: 100px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid #30363d;
+}
+
+/* حل مشكلة الهيدر الثابت (Fixed Header Offset) */
+/* لكي لا يغطي الهيدر عنوان القسم عند الانتقال إليه */
+#about, #services {
+    scroll-margin-top: 60px; 
+}
+
+/* ستايل بسيط للقسم الأول (Hero) */
+.hero {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to bottom, #161b22, #0d1117);
+}
+
+/* =========================================
+   3. تنسيق صفحة تسجيل الدخول (Login)
+   ========================================= */
+.MainDevLogin {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 50px;
+    min-height: calc(100vh - 60px);
+}
+
+.login-title {
+    font-size: 24px;
+    font-weight: 300;
+    margin-bottom: 20px;
+    color: var(--text-white);
+}
+
+.login-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 20px;
+    width: 340px;
+    box-sizing: border-box;
+}
+
+.inpbox {
+    margin-bottom: 15px;
+}
+
+.inpbox label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: var(--text-white);
+}
+
+.label-flex {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* غلاف الإدخال مع الأيقونة */
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.field-icon {
+    position: absolute;
+    left: 10px;
+    width: 16px;
+    height: 16px;
+    opacity: 0.6;
+    filter: invert(1);
+}
+
+.inp {
+    width: 100%;
+    padding: 8px 12px 8px 36px;
+    font-size: 14px;
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-primary);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+}
+
+.inp:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(31, 111, 235, 0.3);
+}
+
+/* الأزرار */
+.submit-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--btn-green);
+    color: white;
+    border: 1px solid rgba(240, 246, 252, 0.1);
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+    background-color: var(--btn-green-hover);
+}
+
+/* أزرار السوشيال ميديا */
+.social-auth {
+    width: 340px;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.auth-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+    background-color: var(--bg-btn-hover);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.auth-btn:hover {
+    border-color: #8b949e;
+}
+
+.auth-btn img {
+    width: 18px;
+    height: 18px;
+}
+
+/* روابط إضافية */
+.forgot-pass, .create-account a {
+    font-size: 12px;
+    color: var(--accent-blue);
+    text-decoration: none;
+}
+
+.create-account {
+    margin-top: 25px;
+    font-size: 14px;
+}
