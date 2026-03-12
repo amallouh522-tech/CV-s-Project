@@ -1,5 +1,5 @@
-import React , {  } from 'react';
-import {BrowserRouter , Routes , Route} from 'react-router-dom';
+import React , { useEffect } from 'react';
+import {BrowserRouter , Routes , Route , useNavigate} from 'react-router-dom';
 import Home from './pages/Home';
 import Register from './pages/Register';
 import Login from './pages/Login';
@@ -8,6 +8,14 @@ import Verify from './pages/Verify';
 
 import "./style.css";
 import Index from './pages/Index';
+
+function Logout() {
+  const Navigate = useNavigate();
+  useEffect(() => {
+    localStorage.removeItem('token');
+    Navigate("/login");
+  } , []);
+}
 
 function App() {
 
@@ -19,6 +27,7 @@ function App() {
         <Route path='/login' element={<Login/>} />
         <Route path='/register' element={<Register/>} />
         <Route path='/verify' element={<Verify/>} />
+        <Route path='/logout' element={<Logout/>} />
         <Route path='/*' element={<NFP/>} />
       </Routes>
     </BrowserRouter>

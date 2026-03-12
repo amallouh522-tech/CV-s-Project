@@ -286,3 +286,27 @@ html {
     margin-top: 25px;
     font-size: 14px;
 }
+.verify{
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 20px;
+    width: fit-content;
+    box-sizing: border-box; 
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    margin: 50px auto;
+}
+.verify .verifyinp{
+    width: 50%;
+    padding: 8px 12px 8px 36px;
+    font-size: 14px;
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-primary);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    margin:10px auto;
+}
