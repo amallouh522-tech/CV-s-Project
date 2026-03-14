@@ -16,6 +16,19 @@ export default function Register() {
     if (token) navigate("/home");
   }, [token, navigate]);
 
+  const GITHUB_CLIENT_ID = "Ov23liQ5rtXeXmTamiOi";
+
+  const loginWithGithub = () => {
+
+    const redirectUri = encodeURIComponent("http://localhost:5173/github/callback");
+
+    window.location.href =
+      `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${redirectUri}&scope=user:email`;
+
+  };
+
+
+
   async function RegisterFetch() {
     const username = usernameRef.current.value;
     const Email = EmailRef.current.value;
@@ -27,6 +40,7 @@ export default function Register() {
         const response = await fetch("http://localhost:5001/api/register", {
           method: "POST",
           headers: { "Content-type": "application/json" },
+          credentials: "include", // <--- ADD THIS LINE
           body: JSON.stringify({ username: username, password: password, email: Email })
         });
         const result = await response.json();
@@ -45,7 +59,7 @@ export default function Register() {
   return (
     <div className='MainDevLogin'>
       <div className='Login-container'>
-        <div style={{textAlign:"center"}} className="head">
+        <div style={{ textAlign: "center" }} className="head">
           <h2 className="login-title">Sign Up to Worky community</h2>
           <h2>{msg ? msg : <br />}</h2>
         </div>
@@ -82,13 +96,9 @@ export default function Register() {
         </div>
 
         <div className="social-auth">
-          <button className="auth-btn github">
+          <button onClick={loginWithGithub} className="auth-btn github">
             <img src="/img/github.png" alt="" />
             <span>Sign in with GitHub</span>
-          </button>
-          <button className="auth-btn facebook">
-            <img src="/img/facebook.png" alt="" />
-            <span>Sign in with Facebook</span>
           </button>
         </div>
 

@@ -1,8 +1,9 @@
 import React, { useRef, useState } from 'react'
-
+import { useNavigate } from "react-router-dom";
 export default function Verify() {
   const [msg, setmsg] = useState();
   const OTPRef = useRef();
+  const navigate = useNavigate();
   async function Verify_fetch() {
     const OTP = OTPRef.current.value;
     if (!OTP) {
@@ -12,6 +13,7 @@ export default function Verify() {
         const response = await fetch("http://localhost:5001/api/verify-token", {
           method: "POST",
           headers: { "Content-type": "application/json" },
+          credentials: "include",
           body: JSON.stringify({ OTP:OTP})
         });
         const result = await response.json();

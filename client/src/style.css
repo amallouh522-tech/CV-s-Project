@@ -23,7 +23,7 @@ body {
 }
 
 html {
-  scroll-behavior: smooth;
+    scroll-behavior: smooth;
 }
 
 /* =========================================
@@ -88,8 +88,8 @@ html {
     border-radius: 6px;
     min-width: 180px;
     padding: 8px 0;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-    
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+
     /* Animation */
     opacity: 0;
     visibility: hidden;
@@ -119,12 +119,14 @@ html {
 }
 
 #about {
-    scroll-margin-top: 80px; /* نفس ارتفاع الهيدر الخاص بك */
+    scroll-margin-top: 80px;
+    /* نفس ارتفاع الهيدر الخاص بك */
 }
 
 /* تنسيق عام للأقسام */
 .content-section {
-    min-height: 80vh; /* يجعل كل قسم يأخذ مساحة كبيرة ليظهر الفرق عند التمرير */
+    min-height: 80vh;
+    /* يجعل كل قسم يأخذ مساحة كبيرة ليظهر الفرق عند التمرير */
     padding: 100px 20px;
     display: flex;
     flex-direction: column;
@@ -135,8 +137,9 @@ html {
 
 /* حل مشكلة الهيدر الثابت (Fixed Header Offset) */
 /* لكي لا يغطي الهيدر عنوان القسم عند الانتقال إليه */
-#about, #services {
-    scroll-margin-top: 60px; 
+#about,
+#services {
+    scroll-margin-top: 60px;
 }
 
 /* ستايل بسيط للقسم الأول (Hero) */
@@ -153,11 +156,41 @@ html {
    3. تنسيق صفحة تسجيل الدخول (Login)
    ========================================= */
 .MainDevLogin {
+    background-color: #0d1117;
+    background-image: radial-gradient(#30363d 1px, transparent 1px);
+    background-size: 40px 40px;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding-top: 50px;
     min-height: calc(100vh - 60px);
+}
+
+#myVideo {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -1; /* لجعل الفيديو في الخلفية */
+    background-size: cover;
+    filter: brightness(50%) blur(3px); /* لتقليل السطوع والحدة */
+}
+
+/* قم بتعديل هذا ليتناسب مع تصميمك الحالي */
+.content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(22, 27, 34, 0.8); /* خلفية شفافة للـ Card */
+    backdrop-filter: blur(10px);
+    border-radius: 8px;
+    padding: 2rem;
+    color: white;
+    /* المزيد من التنسيقات لـ Card */
 }
 
 .login-title {
@@ -276,7 +309,8 @@ html {
 }
 
 /* روابط إضافية */
-.forgot-pass, .create-account a {
+.forgot-pass,
+.create-account a {
     font-size: 12px;
     color: var(--accent-blue);
     text-decoration: none;
@@ -286,19 +320,21 @@ html {
     margin-top: 25px;
     font-size: 14px;
 }
-.verify{
+
+.verify {
     background-color: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: 6px;
     padding: 20px;
     width: fit-content;
-    box-sizing: border-box; 
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     text-align: center;
     margin: 50px auto;
 }
-.verify .verifyinp{
+
+.verify .verifyinp {
     width: 50%;
     padding: 8px 12px 8px 36px;
     font-size: 14px;
@@ -308,5 +344,5 @@ html {
     color: var(--text-primary);
     transition: border-color 0.2s, box-shadow 0.2s;
     outline: none;
-    margin:10px auto;
+    margin: 10px auto;
 }

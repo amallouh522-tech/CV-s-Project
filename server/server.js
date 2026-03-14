@@ -35,12 +35,13 @@ app.use(cors({
 app.use(express.json());
 
 app.use(session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET || "some-secret",
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: false, // Change this to false to avoid empty sessions
     cookie: {
-        secure: false,
-        maxAge: 1000 * 60 * 60
+        secure: false, // Set to true only if using HTTPS
+        httpOnly: true,
+        sameSite: 'lax' // Necessary for modern browsers on localhost
     }
 }));
 
@@ -71,7 +72,6 @@ const transporter = nodemailer.createTransport({
 });
 
 app.post("/api/register", async (req, res) => {
-    console.log("some one register")
     const { username, email, password } = req.body;
     if (!username || !password || !email) {
         res.status(400).json({ succ: false, msg: "Please fill all fields" });
@@ -89,10 +89,7 @@ app.post("/api/register", async (req, res) => {
                 } else {
                     const Hashed_Pass = await bcrypt.hash(password, 10);
                     const OTP = Math.floor(100000 + Math.random() * 900000).toString();
-                    console.log(OTP);
                     req.session.user = { username: username, email: email, password: Hashed_Pass, OTP: OTP };
-                    
-                    /*
                     transporter.sendMail({
                         from: process.env.TRP_FROM, // تأكد من تحديثه إذا قمت بتغييره
                         to: email,
@@ -103,11 +100,9 @@ app.post("/api/register", async (req, res) => {
                             console.error("Error sending email:", error);
                             res.status(500).json({ succ: false, msg: "Error sending OTP email" });
                         } else {
-                            console.log("Email sent:", info.response);
                             res.status(200).json({ succ: true, msg: "OTP sent to your email" });
                         };
                     });
-                    */
                 };
             }
         );

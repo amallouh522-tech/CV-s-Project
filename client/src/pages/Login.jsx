@@ -25,6 +25,7 @@ export default function Login() {
                 const response = await fetch("http://localhost:5001/api/login", {
                     method: "POST",
                     headers: { "Content-type": "application/json" },
+                    credentials: "include",
                     body: JSON.stringify({ username: username, password: password })
                 });
                 const result = await response.json();
@@ -39,6 +40,17 @@ export default function Login() {
             };
         };
     }
+
+    const GITHUB_CLIENT_ID = "Ov23liQ5rtXeXmTamiOi";
+
+    const loginWithGithub = () => {
+
+        const redirectUri = encodeURIComponent("http://localhost:5173/github/callback");
+
+        window.location.href =
+            `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${redirectUri}&scope=user:email`;
+
+    };
 
     return (
         <div className='MainDevLogin'>
@@ -80,13 +92,9 @@ export default function Login() {
                 </div>
 
                 <div className="social-auth">
-                    <button className="auth-btn github">
+                    <button onClick={loginWithGithub} className="auth-btn github">
                         <img src="/img/github.png" alt="" />
                         <span>Sign in with GitHub</span>
-                    </button>
-                    <button className="auth-btn facebook">
-                        <img src="/img/facebook.png" alt="" />
-                        <span>Sign in with Facebook</span>
                     </button>
                 </div>
 
@@ -95,6 +103,5 @@ export default function Login() {
                 </p>
             </div>
         </div>
-
     );
 }
