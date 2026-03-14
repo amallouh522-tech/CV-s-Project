@@ -11,7 +11,7 @@ export default function AddNewCv() {
         if (!token) {
             navigate("/login");
         }
-    }, [token, navigate]);
+    }, []);
 
     const AddCvFetch = async () => {
         const CvTitle = CvTitleRef.current.value;

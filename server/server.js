@@ -158,7 +158,6 @@ app.post("/api/login", (req, res) => {
                 const tokenData = { username: usr.username, ID: usr.ID };
                 const IS_match = await bcrypt.compare(password, usr.password);
                 if (IS_match) {
-                    req.session.user = usr;
                     const token = jwt.sign(
                         { tokenData },
                         jwtSecret,
@@ -232,7 +231,23 @@ app.post("/api/auth/github/callback", async (req, res) => {
     }
 });
 app.post("/api/addcv", authenticateToken, (req, res) => {
-
+    const {CvTitle, Cvcontent} = req.body;
+    if (!CvTitle || !Cvcontent) {
+        res.status(400).json({succ : false , msg : "missing Data"});
+    }
+    DB.query(
+        "SELECT * FROM `Cv's` WHERE username=?",
+        ["Anas"],
+        (err , result) => {
+            if (err) {
+                console.error("error In server ln : 244 endpoint : addcv" , err);
+                res.status(500).json({succ : false , msg : "Interanl server Error"})
+            }
+            if (result.length > 0) {
+                res.status(201).json({succ : true})
+            }
+        }
+    )
 });
 app.listen(5001, () => {
     console.log("Server running on port 5001");
