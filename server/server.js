@@ -157,6 +157,7 @@ app.post("/api/login", (req, res) => {
                 const usr = result[0];
                 const tokenData = { username: usr.username, ID: usr.ID };
                 const IS_match = await bcrypt.compare(password, usr.password);
+                req.session.username = usr.username;
                 if (IS_match) {
                     const token = jwt.sign(
                         { tokenData },
@@ -237,7 +238,7 @@ app.post("/api/addcv", authenticateToken, (req, res) => {
     }
     DB.query(
         "SELECT * FROM `Cv's` WHERE username=?",
-        ["Anas"],
+        [req.session.username],
         (err , result) => {
             if (err) {
                 console.error("error In server ln : 244 endpoint : addcv" , err);
