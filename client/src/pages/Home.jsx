@@ -4,13 +4,11 @@ import { useNavigate, Link } from 'react-router-dom'
 export default function Home() {
     const Navigate = useNavigate();
     const token = localStorage.getItem('token');
-    /*
     useEffect(() => {
         if (!token) {
             Navigate("/login");
         }
     }, []);
-    */
     return (
         <div className='home'>
             <header className='main-header'>

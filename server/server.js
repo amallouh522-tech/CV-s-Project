@@ -35,12 +35,13 @@ app.use(cors({
 app.use(express.json());
 
 app.use(session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET || "some-secret",
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: false, // Change this to false to avoid empty sessions
     cookie: {
-        secure: false,
-        maxAge: 1000 * 60 * 60
+        secure: false, // Set to true only if using HTTPS
+        httpOnly: true,
+        sameSite: 'lax' // Necessary for modern browsers on localhost
     }
 }));
 
@@ -102,7 +103,6 @@ app.post("/api/register", async (req, res) => {
                             console.error("Error sending email:", error);
                             res.status(500).json({ succ: false, msg: "Error sending OTP email" });
                         } else {
-                            console.log("Email sent:", info.response);
                             res.status(200).json({ succ: true, msg: "OTP sent to your email" });
                         };
                     });
