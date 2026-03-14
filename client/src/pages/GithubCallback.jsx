@@ -11,7 +11,7 @@ export default function GithubCallback() {
 
     if (!code) return;
 
-    fetch("http://localhost:5001/api/auth/github/callback",{
+    fetch("/api/auth/github/callback",{
       method:"POST",
       headers:{
         "Content-Type":"application/json"

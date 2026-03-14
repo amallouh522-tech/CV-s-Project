@@ -37,7 +37,7 @@ export default function Register() {
       setmsg("Please Enter valid Data");
     } else {
       try {
-        const response = await fetch("http://localhost:5001/api/register", {
+        const response = await fetch("/api/register", {
           method: "POST",
           headers: { "Content-type": "application/json" },
           credentials: "include", // <--- ADD THIS LINE

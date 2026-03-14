@@ -10,7 +10,7 @@ export default function Verify() {
       setmsg("Please Enter Valid Data");
     } else {
       try {
-        const response = await fetch("http://localhost:5001/api/verify-token", {
+        const response = await fetch("/api/verify-token", {
           method: "POST",
           headers: { "Content-type": "application/json" },
           credentials: "include",

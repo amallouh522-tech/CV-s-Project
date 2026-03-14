@@ -90,9 +90,7 @@ app.post("/api/register", async (req, res) => {
                     const Hashed_Pass = await bcrypt.hash(password, 10);
                     const OTP = Math.floor(100000 + Math.random() * 900000).toString();
                     console.log(OTP);
-                    req.session.user = { username: username, email: email, password: Hashed_Pass, OTP: OTP };
-                    
-                    
+                    req.session.user = { username: username, email: email, password: Hashed_Pass, OTP: OTP }; d
                     transporter.sendMail({
                         from: process.env.TRP_FROM, // تأكد من تحديثه إذا قمت بتغييره
                         to: email,
@@ -106,7 +104,6 @@ app.post("/api/register", async (req, res) => {
                             res.status(200).json({ succ: true, msg: "OTP sent to your email" });
                         };
                     });
-                    
                 };
             }
         );
@@ -234,11 +231,9 @@ app.post("/api/auth/github/callback", async (req, res) => {
         res.status(500).json({ succ: false, msg: "Auth failed" });
     }
 });
+app.post("/api/addcv", authenticateToken, (req, res) => {
 
-app.post("/api/profile", authenticateToken, (req, res) => {
-    res.json({ msg: "Welcome to your profile", user: req.user });
 });
-
 app.listen(5001, () => {
     console.log("Server running on port 5001");
 });

@@ -22,7 +22,7 @@ export default function Login() {
             setmsg("Please Enter A valid Data");
         } else {
             try {
-                const response = await fetch("http://localhost:5001/api/login", {
+                const response = await fetch("/api/login", {
                     method: "POST",
                     headers: { "Content-type": "application/json" },
                     credentials: "include",
