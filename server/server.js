@@ -8,6 +8,8 @@ const jwt = require("jsonwebtoken");
 const { Server } = require("socket.io");
 const bcrypt = require("bcrypt");
 const axios = require("axios");
+const multer = require('multer');
+const path = require('path');
 
 const app = express();
 
@@ -45,6 +47,8 @@ app.use(session({
     }
 }));
 
+app.use('/uploads', express.static('uploads'));
+
 const DB = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -69,6 +73,33 @@ const transporter = nodemailer.createTransport({
     // إعدادات إضافية لمنع التعليق
     connectionTimeout: 10000,
     greetingTimeout: 10000,
+});
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/'); // اسم المجلد
+    },
+    filename: (req, file, cb) => {
+        // تغيير اسم الملف لمنع التكرار (الوقت الحالي + اسم الملف الأصلي)
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({ storage: storage });
+
+// 'cv_photos' هو نفس الـ name الموجود في الـ input
+app.post('/upload-multiple', upload.array('cv_photos', 10), (req, res) => {
+    // الصور ستكون مصفوفة (Array) داخل req.files
+    const uploadedFiles = req.files;
+
+    if (!uploadedFiles) {
+        return res.status(400).send('لم يتم اختيار صور.');
+    }
+
+    console.log(`تم استلام ${uploadedFiles.length} صور`);
+    
+    // الآن يمكنك عمل Loop لحفظ المسارات في SQL كما شرحنا سابقاً
+    res.send('تم الرفع بنجاح');
 });
 
 app.post("/api/register", async (req, res) => {

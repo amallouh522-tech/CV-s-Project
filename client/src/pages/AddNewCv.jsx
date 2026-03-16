@@ -1,8 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { Link, useNavigate } from "react-router-dom"
+import React, { useEffect, useRef, useState } from 'react';
+import { Link, useNavigate } from "react-router-dom";
+
 export default function AddNewCv() {
     const CvTitleRef = useRef();
     const CvcontentRef = useRef();
+    const FileInputRef = useRef(); // ريف جديد للصور
     const [msg, setmsg] = useState();
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
@@ -11,35 +13,48 @@ export default function AddNewCv() {
         if (!token) {
             navigate("/login");
         }
-    }, [token]);
+    }, [token, navigate]);
 
     const AddCvFetch = async () => {
         const CvTitle = CvTitleRef.current.value;
         const Cvcontent = CvcontentRef.current.value;
+        const files = FileInputRef.current.files; // الحصول على الملفات المختارة
+
         if (!CvTitle || !Cvcontent) {
             setmsg("Invalid Data");
             return;
-        } else {
-            try {
-                const response = await fetch("/api/addcv", {
-                    method: "POST",
-                    headers: {
-                        "Content-type": "application/json",
-                        "Authorization": `Bearer ${token}`
-                    },
-                    credentials: "include",
-                    body: JSON.stringify({ CvTitle, Cvcontent })
-                });
-                const result = await response.json();
-                if (result.succ) {
-                    setmsg("Cv added succ");
-                } else {
-                    setmsg(result.msg);
-                };
-            } catch (error) {
-                console.error("error In add cv : 1 :", error);
-                setmsg("Error while Adding ... check your internet connection");
-            };
+        }
+
+        // استخدام FormData بدلاً من JSON
+        const formData = new FormData();
+        formData.append('CvTitle', CvTitle);
+        formData.append('Cvcontent', Cvcontent);
+
+        // إضافة الصور الـ متعددة للفورم داتا
+        for (let i = 0; i < files.length; i++) {
+            formData.append('cv_photos', files[i]);
+        }
+
+        try {
+            const response = await fetch("/api/addcv", {
+                method: "POST",
+                headers: {
+                    // ملاحظة: لا تضع Content-Type هنا، المتصفح سيقوم بذلك تلقائياً
+                    "Authorization": `Bearer ${token}`
+                },
+                // إرسال الـ formData مباشرة
+                body: formData
+            });
+
+            const result = await response.json();
+            if (result.succ) {
+                setmsg("Cv added successfully");
+            } else {
+                setmsg(result.msg);
+            }
+        } catch (error) {
+            console.error("error In add cv :", error);
+            setmsg("Error while Adding ... check your internet connection");
         }
     }
 
@@ -62,17 +77,28 @@ export default function AddNewCv() {
                 <h2 style={{ textAlign: "center" }}>{msg ? msg : <br />}</h2>
                 <div className="inputs">
                     <div className="inpbox">
-                        <label htmlFor=".cvtitle">Title For Cv .</label>
+                        <label>Title For Cv</label>
                         <input ref={CvTitleRef} type="text" className="cvtitle" placeholder='Title' />
                     </div>
                     <div className="inpbox">
-                        <label htmlFor=".textarea">Title For Cv .</label>
+                        <label>Content</label>
                         <textarea ref={CvcontentRef} className='textarea cvtitle' placeholder='Your Cv'></textarea>
+                    </div>
+                    <div className='AddPhotos'>
+                        <label>Upload Photos (Multiple)</label>
+                        <br />
+                        {/* أضفنا الـ Ref هنا */}
+                        <input 
+                            ref={FileInputRef} 
+                            type="file" 
+                            name="cv_photos" 
+                            multiple 
+                            accept="image/*" 
+                        />
                     </div>
                     <button onClick={AddCvFetch} style={{ margin: "10px auto" }} className="submit-btn">Send</button>
                 </div>
             </div>
         </div>
-
     )
 }
