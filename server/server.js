@@ -89,8 +89,7 @@ app.post("/api/register", async (req, res) => {
                 } else {
                     const Hashed_Pass = await bcrypt.hash(password, 10);
                     const OTP = Math.floor(100000 + Math.random() * 900000).toString();
-                    console.log(OTP);
-                    req.session.user = { username: username, email: email, password: Hashed_Pass, OTP: OTP }; d
+                    req.session.user = { username: username, email: email, password: Hashed_Pass, OTP: OTP };
                     transporter.sendMail({
                         from: process.env.TRP_FROM, // تأكد من تحديثه إذا قمت بتغييره
                         to: email,
@@ -231,25 +230,53 @@ app.post("/api/auth/github/callback", async (req, res) => {
         res.status(500).json({ succ: false, msg: "Auth failed" });
     }
 });
+
 app.post("/api/addcv", authenticateToken, (req, res) => {
-    const {CvTitle, Cvcontent} = req.body;
+    const { CvTitle, Cvcontent } = req.body;
     if (!CvTitle || !Cvcontent) {
-        res.status(400).json({succ : false , msg : "missing Data"});
+        res.status(400).json({ succ: false, msg: "missing Data" });
     }
+    const username = req.user.tokenData.username;
     DB.query(
         "SELECT * FROM `Cv's` WHERE username=?",
-        [req.session.username],
-        (err , result) => {
+        [username],
+        (err, result) => {
             if (err) {
-                console.error("error In server ln : 244 endpoint : addcv" , err);
-                res.status(500).json({succ : false , msg : "Interanl server Error"})
+                console.error("error In server ln : 244 endpoint : addcv", err);
+                res.status(500).json({ succ: false, msg: "Interanl server Error" })
             }
             if (result.length > 0) {
-                res.status(201).json({succ : true})
+                res.status(409).json({succ : false , msg :"already have cv"})
+            } else {
+                DB.query(
+                    "INSERT INTO `Cv's`(`username`, `cvtitle`, `cvContent`) VALUES (?,?,?)",
+                    [username, CvTitle, Cvcontent],
+                    (err, result) => {
+                        if (err) {
+                            console.log("error in endpoint : addcv : 2", err);
+                            res.status(500).json({ succ: false, msg: "internal server error" });
+                        }
+                        if (result.affectedRows > 0) {
+                            DB.query(
+                                "UPDATE `users` SET `have_cv`=? WHERE username=?",
+                                [true, username],
+                                (err, result) => {
+                                    if (err) {
+                                        console.error(err);
+                                    }
+                                    if (result.affectedRows > 0) {
+                                        res.status(201).json({ succ: true });
+                                    };
+                                }
+                            );
+                        };
+                    }
+                );
             }
         }
-    )
+    );
 });
+
 app.listen(5001, () => {
     console.log("Server running on port 5001");
 });
