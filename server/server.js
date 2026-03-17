@@ -97,7 +97,7 @@ app.post('/upload-multiple', upload.array('cv_photos', 10), (req, res) => {
     }
 
     console.log(`تم استلام ${uploadedFiles.length} صور`);
-    
+
     // الآن يمكنك عمل Loop لحفظ المسارات في SQL كما شرحنا سابقاً
     res.send('تم الرفع بنجاح');
 });
@@ -262,45 +262,58 @@ app.post("/api/auth/github/callback", async (req, res) => {
     }
 });
 
-app.post("/api/addcv", authenticateToken, (req, res) => {
+// server.js (الجزء الخاص بـ addcv)
+
+app.post("/api/addcv", authenticateToken, upload.array('cv_photos', 10), (req, res) => {
+    // 1. استخراج البيانات النصية
     const { CvTitle, Cvcontent } = req.body;
+
+    // 2. التحقق من وجود البيانات
     if (!CvTitle || !Cvcontent) {
-        res.status(400).json({ succ: false, msg: "missing Data" });
+        return res.status(400).json({ succ: false, msg: "missing Data" });
     }
+
+    // 3. استخراج الصور المرفوعة (إذا وجدت) وتحويل أسمائها لنص
+    const uploadedFiles = req.files || [];
+    const imagesString = uploadedFiles.map(file => file.filename).join(',');
+
     const username = req.user.tokenData.username;
+
+    // 4. التحقق من وجود CV سابق
     DB.query(
-        "SELECT * FROM `Cv's` WHERE username=?",
+        "SELECT * FROM `Cvs` WHERE username=?",
         [username],
         (err, result) => {
             if (err) {
-                console.error("error In server ln : 244 endpoint : addcv", err);
-                res.status(500).json({ succ: false, msg: "Interanl server Error" })
+                console.error("Database Error:", err);
+                return res.status(500).json({ succ: false, msg: "Internal server Error" });
             }
+
             if (result.length > 0) {
-                res.status(409).json({succ : false , msg :"already have cv"})
+                return res.status(409).json({ succ: false, msg: "Already have a CV" });
             } else {
+                // 5. إدخال البيانات الجديدة (تأكد من وجود عمود الصور في جدولك)
+                const sql = "INSERT INTO `Cvs` (`username`, `cvtitle`, `cvContent`) VALUES (?,?,?)";
                 DB.query(
-                    "INSERT INTO `Cv's`(`username`, `cvtitle`, `cvContent`) VALUES (?,?,?)",
+                    sql,
                     [username, CvTitle, Cvcontent],
                     (err, result) => {
                         if (err) {
-                            console.log("error in endpoint : addcv : 2", err);
-                            res.status(500).json({ succ: false, msg: "internal server error" });
+                            console.error("Insert Error:", err);
+                            return res.status(500).json({ succ: false, msg: "Internal server error" });
                         }
+
                         if (result.affectedRows > 0) {
+                            // 6. تحديث حالة المستخدم
                             DB.query(
                                 "UPDATE `users` SET `have_cv`=? WHERE username=?",
                                 [true, username],
-                                (err, result) => {
-                                    if (err) {
-                                        console.error(err);
-                                    }
-                                    if (result.affectedRows > 0) {
-                                        res.status(201).json({ succ: true });
-                                    };
+                                (err) => {
+                                    if (err) console.error("Update User Error:", err);
+                                    res.status(201).json({ succ: true, msg: "CV added successfully with photos" });
                                 }
                             );
-                        };
+                        }
                     }
                 );
             }
